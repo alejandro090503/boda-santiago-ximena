@@ -7,7 +7,7 @@
   <title>Santiago &amp; Ximena · 12 · Octubre · 2027</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Great+Vibes&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Italianno&family=Lato:wght@300;400&display=swap" rel="stylesheet">
   <style>
 /* ── TOKENS ───────────────────────────────────────────── */
 :root {
@@ -34,11 +34,74 @@ body{
 }
 section{padding:64px 22px}
 
-/* ── LOADER ───────────────────────────────────────────── */
+/* ── LOADER (inactivo, reemplazado por envelope) ──────── */
 #loader{
-  position:fixed;inset:0;z-index:9999;
+  position:fixed;inset:0;z-index:9990;
   background:var(--ink);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+}
+
+/* ── MAIN WRAP (oculto hasta abrir sobre) ─────────────── */
+.main-wrap{visibility:hidden}
+.main-wrap.visible{visibility:visible}
+
+/* ── ENVELOPE OPENING SEQUENCE ────────────────────────── */
+#envelope-screen{
+  position:fixed;inset:0;z-index:9998;
+  background:#fff;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+#env-image,#env-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;opacity:0;
+  transform:scale(1.18);
+  will-change:opacity,transform;
+  pointer-events:none;
+}
+#env-video{display:none}
+#env-tap-hint{
+  position:absolute;bottom:8vh;left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  color:#2A2F1C;
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;
+  font-size:13px;letter-spacing:5px;text-transform:uppercase;
+  text-align:center;pointer-events:none;opacity:0;
+  padding:14px 26px;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(125,138,86,.45);
+  border-radius:40px;
+  box-shadow:
+    0 6px 22px rgba(58,65,42,.18),
+    0 0 0 6px rgba(255,255,255,.28);
+  animation:envHintIn .9s ease 1.1s forwards,
+            envHintPulse 2.2s ease-in-out 2s infinite;
+}
+#env-tap-hint::after{
+  content:'';position:absolute;inset:-14px;border-radius:50px;
+  border:1px solid rgba(125,138,86,.35);
+  animation:envHintHalo 2.4s ease-out infinite;
+  pointer-events:none;
+}
+@keyframes envHintIn{to{opacity:1}}
+@keyframes envHintPulse{
+  0%,100%{transform:translateX(-50%) scale(1)}
+  50%{transform:translateX(-50%) scale(1.04)}
+}
+@keyframes envHintHalo{
+  0%{opacity:.9;transform:scale(1)}
+  100%{opacity:0;transform:scale(1.22)}
+}
+#env-flash{
+  position:fixed;inset:0;z-index:9999;
+  background:#fff;opacity:0;pointer-events:none;
+  will-change:opacity;
+}
+@media(prefers-reduced-motion:reduce){
+  #env-tap-hint{animation:envHintIn .9s ease forwards}
 }
 .ld-names{
   font-family:'Great Vibes',cursive;font-size:72px;color:var(--olive);
@@ -135,22 +198,22 @@ section{padding:64px 22px}
   display:block;
 }
 
-/* Gradient overlay — más claro para legibilidad del texto */
+/* Gradient overlay — reforzado para máxima legibilidad del texto */
 .h-ov{
   position:absolute;inset:0;z-index:1;
   background:
     linear-gradient(to bottom,
-      rgba(255,255,255,.55) 0%,
-      rgba(250,247,236,.30) 32%,
-      rgba(250,247,236,.45) 62%,
-      rgba(250,247,236,.95) 100%);
+      rgba(255,255,255,.68) 0%,
+      rgba(250,247,236,.48) 32%,
+      rgba(250,247,236,.62) 62%,
+      rgba(250,247,236,.97) 100%);
 }
-/* Halo radial detrás del nombre para mayor visibilidad */
+/* Halo radial detrás del nombre — más presente */
 .h-ov::after{
   content:'';position:absolute;
   left:50%;top:48%;transform:translate(-50%,-50%);
-  width:92%;max-width:420px;aspect-ratio:1;
-  background:radial-gradient(circle, rgba(255,255,255,.45) 0%, rgba(250,247,236,.2) 38%, transparent 65%);
+  width:96%;max-width:460px;aspect-ratio:1;
+  background:radial-gradient(circle, rgba(255,255,255,.78) 0%, rgba(250,247,236,.45) 40%, transparent 68%);
   pointer-events:none;
 }
 
@@ -225,51 +288,64 @@ section{padding:64px 22px}
 .h-div::after{background:linear-gradient(to left,transparent,var(--olive))}
 .h-div-dot{font-size:10px;color:var(--olive);letter-spacing:6px}
 
-/* ── NOMBRES DE LOS NOVIOS — REDISEÑO ELEGANTE ───────── */
+/* ── NOMBRES DE LOS NOVIOS — CINZEL + GOTA EN CHARCO ──── */
 .h-name-wrap{
   display:flex;align-items:center;justify-content:center;
   gap:12px;width:100%;
-  animation:hNameWind 11s ease-in-out infinite;
-  transform-origin:center center;
-}
-.h-name-wrap + .h-amp-clip + .h-name-wrap{animation-delay:2.2s}
-@keyframes hNameWind{
-  0%,100%{transform:translateX(0)}
-  25%   {transform:translateX(2px)}
-  50%   {transform:translateX(0)}
-  75%   {transform:translateX(-2px)}
+  position:relative;
 }
 .h-clip{
-  overflow:hidden;line-height:1.1;padding:6px 0;
-  flex:0 0 auto;
+  overflow:visible;line-height:1;padding:10px 0;
+  flex:0 0 auto;position:relative;
 }
 .h-name{
-  font-family:'Cormorant Garamond',serif;
-  font-weight:300;
-  font-style:italic;
-  font-size:56px;
-  letter-spacing:1px;
-  color:var(--cream);
+  font-family:'Cinzel',serif;
+  font-weight:500;
+  font-size:42px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:#2A2F1C;
   display:block;
   text-shadow:
-    0 2px 22px rgba(255,255,255,.9),
-    0 4px 38px rgba(168,180,120,.35),
-    0 1px 2px rgba(58,65,42,.25);
-  will-change:transform,filter;
+    0 2px 22px rgba(255,255,255,1),
+    0 0 40px rgba(255,255,255,.85),
+    0 4px 28px rgba(168,180,120,.35),
+    0 1px 2px rgba(58,65,42,.3);
+  will-change:transform,opacity,filter;
   transform-origin:center center;
   white-space:nowrap;
+  position:relative;z-index:2;
 }
 
-.h-amp-clip{overflow:hidden;line-height:1;margin:6px 0 8px}
+/* Ripple (onda de gota en charco) */
+.h-ripple{
+  position:absolute;
+  left:50%;top:55%;
+  width:180px;height:60px;
+  transform:translate(-50%,-50%) scale(0);
+  pointer-events:none;z-index:1;opacity:0;
+}
+.h-ripple::before,.h-ripple::after{
+  content:'';position:absolute;inset:0;
+  border-radius:50%;
+  border:1px solid rgba(125,138,86,.55);
+}
+.h-ripple::after{
+  inset:8px;border-color:rgba(125,138,86,.28);
+}
+
+.h-amp-clip{overflow:visible;line-height:1;margin:14px 0;position:relative}
 .h-amp{
-  font-family:'Great Vibes',cursive;
-  font-size:62px;
+  font-family:'Italianno',cursive;
+  font-size:84px;
   color:var(--olive);
   display:block;
+  line-height:.8;
   text-shadow:
-    0 2px 18px rgba(255,255,255,.8),
-    0 0 32px rgba(168,180,120,.5);
-  will-change:transform;
+    0 2px 24px rgba(255,255,255,1),
+    0 0 40px rgba(168,180,120,.55),
+    0 2px 6px rgba(58,65,42,.25);
+  will-change:transform,opacity,filter;
 }
 
 /* Líneas de viento laterales — delgadas */
@@ -286,17 +362,35 @@ section{padding:64px 22px}
   50%{opacity:.9;transform:scaleX(1)}
 }
 
-.h-date-wrap{margin-top:32px;position:relative}
+.h-date-wrap{
+  margin-top:40px;position:relative;
+  display:inline-flex;flex-direction:column;align-items:center;
+  padding:16px 28px 14px;
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(168,180,120,.35);
+  border-radius:2px;
+  box-shadow:0 4px 28px rgba(168,180,120,.18),0 0 0 3px rgba(255,255,255,.35);
+}
+.h-date-wrap::before,.h-date-wrap::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%);
+  width:26px;height:1px;background:var(--olive);
+}
+.h-date-wrap::before{top:-1px;box-shadow:0 -6px 0 -5px var(--olive)}
+.h-date-wrap::after{bottom:-1px}
 .h-date{
   font-family:'Cormorant Garamond',serif;
-  font-size:14px;letter-spacing:6px;text-transform:uppercase;
-  color:var(--olive);
-  text-shadow:0 1px 6px rgba(255,255,255,.85);
+  font-weight:600;
+  font-size:17px;letter-spacing:5px;text-transform:uppercase;
+  color:#2A2F1C;
+  text-shadow:0 1px 8px rgba(255,255,255,.9);
 }
 .h-city{
-  font-size:9px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--cream);opacity:.65;margin-top:10px;
-  text-shadow:0 1px 4px rgba(255,255,255,.7);
+  font-family:'Cormorant Garamond',serif;
+  font-size:11px;letter-spacing:5px;text-transform:uppercase;
+  font-weight:500;
+  color:var(--olive);opacity:1;margin-top:8px;
+  text-shadow:0 1px 6px rgba(255,255,255,.9);
 }
 
 /* Scroll cue */
@@ -1598,11 +1692,22 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
 </head>
 <body>
 
-<!-- LOADER -->
+<!-- LOADER (inactivo — reemplazado por envelope) -->
 <div id="loader">
   <div class="ld-names">S &amp; X</div>
   <div class="ld-track"><div class="ld-bar"></div></div>
 </div>
+
+<!-- ENVELOPE OPENING SEQUENCE -->
+<div id="envelope-screen">
+  <img id="env-image" src="assets/envelope.png" alt="Sobre de invitación">
+  <video id="env-video" src="assets/envelope-open.mp4" muted playsinline preload="auto"></video>
+  <div id="env-tap-hint">Toca para abrir</div>
+</div>
+<div id="env-flash" aria-hidden="true"></div>
+
+<!-- MAIN WRAP (oculto hasta abrir sobre) -->
+<div class="main-wrap">
 
 <!-- SCROLL PROGRESS -->
 <div id="prog"></div>
@@ -1661,13 +1766,19 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
 
     <div class="h-name-wrap">
       <span class="h-name-wind-line"></span>
-      <div class="h-clip"><span class="h-name h-name-wind" id="hN1">Santiago</span></div>
+      <div class="h-clip">
+        <span class="h-ripple" id="rip1" aria-hidden="true"></span>
+        <span class="h-name" id="hN1">Santiago</span>
+      </div>
       <span class="h-name-wind-line"></span>
     </div>
     <div class="h-amp-clip"><span class="h-amp" id="hAmp">&amp;</span></div>
     <div class="h-name-wrap">
       <span class="h-name-wind-line"></span>
-      <div class="h-clip"><span class="h-name h-name-wind" id="hN2">Ximena</span></div>
+      <div class="h-clip">
+        <span class="h-ripple" id="rip2" aria-hidden="true"></span>
+        <span class="h-name" id="hN2">Ximena</span>
+      </div>
       <span class="h-name-wind-line"></span>
     </div>
 
@@ -2215,6 +2326,8 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
   </a>
 </footer>
 
+</div><!-- /.main-wrap -->
+
 
 <!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -2224,29 +2337,111 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
 /* ── BOOT ─────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   gsap.registerPlugin(ScrollTrigger);
-
-  // Remove loader → boot everything
-  setTimeout(() => {
-    gsap.to('#loader', {
-      opacity: 0, duration: .7, ease: 'power2.out',
-      onComplete() {
-        document.getElementById('loader').remove();
-        addSectionWaves();
-        addSectionMedals();
-        addCorners();
-        addWindOrns();
-        addAuras();
-        heroAnim();
-        spawnParticles();
-        scrollAnims();
-        countdown();
-        setInterval(countdown, 1000);
-        ambientWind();
-        initGallery();
-      }
-    });
-  }, 1700);
+  initEnvelope();
 });
+
+/* Lanza todas las animaciones e inicializadores de la invitación.
+   Se invoca UNA sola vez desde el onComplete del flash del sobre. */
+let __pageLaunched = false;
+function launchPage() {
+  if (__pageLaunched) return;
+  __pageLaunched = true;
+  const ldr = document.getElementById('loader');
+  if (ldr) ldr.remove();
+  addSectionWaves();
+  addSectionMedals();
+  addCorners();
+  addWindOrns();
+  addAuras();
+  heroAnim();
+  spawnParticles();
+  scrollAnims();
+  countdown();
+  setInterval(countdown, 1000);
+  ambientWind();
+  initGallery();
+  if (window.ScrollTrigger) ScrollTrigger.refresh();
+}
+
+/* ── ENVELOPE OPENING SEQUENCE ───────────────────────── */
+function initEnvelope() {
+  const screen = document.getElementById('envelope-screen');
+  const img    = document.getElementById('env-image');
+  const vid    = document.getElementById('env-video');
+  const hint   = document.getElementById('env-tap-hint');
+  const flash  = document.getElementById('env-flash');
+  const wrap   = document.querySelector('.main-wrap');
+
+  // Fallback: si algo falta, revela la invitación directamente
+  if (!screen || !img || !vid || !flash || !wrap) {
+    if (wrap) wrap.classList.add('visible');
+    if (screen) screen.style.display = 'none';
+    launchPage();
+    return;
+  }
+
+  // Fade-in suave de la imagen del sobre
+  gsap.to(img, { opacity: 1, duration: 1.1, ease: 'power2.out' });
+
+  let opened   = false;
+  let flashing = false;
+
+  const revealPage = () => {
+    screen.style.display = 'none';
+    wrap.classList.add('visible');
+    launchPage();
+    // Disolución del flash revelando la invitación
+    gsap.to(flash, {
+      opacity: 0, duration: 1.2, ease: 'power2.out', delay: .05,
+      onComplete() { flash.style.display = 'none'; }
+    });
+  };
+
+  const triggerFlash = () => {
+    if (flashing) return;
+    flashing = true;
+    gsap.to(flash, {
+      opacity: 1, duration: 1.6, ease: 'power2.inOut',
+      onComplete: revealPage
+    });
+  };
+
+  const openEnvelope = () => {
+    if (opened) return;
+    opened = true;
+
+    gsap.to(hint, { opacity: 0, duration: .35, ease: 'power2.out' });
+
+    vid.style.display = 'block';
+    vid.muted = true;
+    const playPromise = vid.play();
+    if (playPromise && playPromise.catch) playPromise.catch(() => {});
+
+    // Crossfade SIMULTÁNEO imagen → video (sin frame negro)
+    gsap.to(img, {
+      opacity: 0, duration: .75, ease: 'power2.out',
+      onComplete() { img.style.display = 'none'; }
+    });
+    gsap.fromTo(vid,
+      { opacity: 0 },
+      { opacity: 1, duration: .75, ease: 'power2.out' }
+    );
+
+    // Dispara flash cuando falten ≤2s para terminar el video
+    vid.addEventListener('timeupdate', () => {
+      if (flashing) return;
+      const d = vid.duration;
+      if (!d || isNaN(d) || !isFinite(d)) return;
+      if (vid.currentTime >= d - 2) triggerFlash();
+    });
+
+    // Fallback: si 'timeupdate' no cumple a tiempo
+    vid.addEventListener('ended', () => { if (!flashing) triggerFlash(); });
+  };
+
+  screen.addEventListener('click', openEnvelope);
+  screen.addEventListener('touchstart', openEnvelope, { passive: true });
+}
 
 /* ── SCROLL PROGRESS ─────────────────────────────────── */
 window.addEventListener('scroll', () => {
@@ -2255,23 +2450,48 @@ window.addEventListener('scroll', () => {
     (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
 }, { passive: true });
 
-/* ── HERO ANIMATIONS ─────────────────────────────────── */
+/* ── HERO ANIMATIONS — EFECTO GOTA EN CHARCO ─────────── */
 function heroAnim() {
-  // Set initial states
+  // Estados iniciales
   gsap.set(['#hWe','#hDiv','#hLine','#hDate','#hScroll'], { opacity: 0 });
-  gsap.set(['#hN1','#hN2','#hAmp'], { yPercent: 110 });
+  gsap.set(['#hN1','#hN2','#hAmp'], {
+    opacity: 0, y: -30, scale: 1.35,
+    filter: 'blur(10px)', transformOrigin: 'center center'
+  });
+  gsap.set(['#rip1','#rip2'], { opacity: 0, scale: 0 });
 
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  const drop = (sel, rippleSel) => gsap.timeline()
+    // Caída de la "gota"
+    .to(sel, {
+      opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
+      duration: .95, ease: 'power3.out'
+    })
+    // Pequeño rebote vertical (aplastamiento al tocar el agua)
+    .to(sel, {
+      scaleY: .88, scaleX: 1.06,
+      duration: .16, ease: 'power2.out'
+    }, '-=.08')
+    .to(sel, {
+      scaleY: 1, scaleX: 1,
+      duration: .5, ease: 'elastic.out(1, .55)'
+    })
+    // Onda expansiva simultánea al aplastamiento
+    .fromTo(rippleSel,
+      { opacity: .85, scale: .15 },
+      { opacity: 0, scale: 2.6, duration: 1.2, ease: 'power2.out' },
+      '-=.62'
+    );
+
+  const tl = gsap.timeline();
   tl
-    .to('#hWe',    { opacity: 1, duration: .7 }, .1)
-    .to('#hDiv',   { opacity: 1, duration: .5 }, .3)
-    .to('#hN1',    { yPercent: 0, duration: 1 }, .45)
-    .to('#hAmp',   { yPercent: 0, duration: .8 }, .7)
-    .to('#hN2',    { yPercent: 0, duration: 1  }, .82)
-    .to('#hLine',  { opacity: .7, duration: .6 }, 1.15)
-    .to('#hDate',  { opacity: 1, duration: .7  }, 1.28)
-    .to('#hScroll',{ opacity: 1, duration: .5  }, 1.7)
-    .call(breathText, [], '>+=0.3');
+    .to('#hWe',    { opacity: 1, duration: .7, ease: 'power2.out' }, .1)
+    .to('#hDiv',   { opacity: 1, duration: .5, ease: 'power2.out' }, .3)
+    .add(drop('#hN1', '#rip1'), .55)
+    .add(drop('#hAmp', '#rip1'), 1.2)
+    .add(drop('#hN2', '#rip2'), 1.55)
+    .to('#hLine',  { opacity: .7, duration: .6, ease: 'power2.out' }, 2.6)
+    .to('#hDate',  { opacity: 1, duration: .7, ease: 'power2.out' }, 2.75)
+    .to('#hScroll',{ opacity: 1, duration: .5, ease: 'power2.out' }, 3.1);
 
   // Hero parallax
   gsap.to('#heroBg', {
@@ -2703,28 +2923,7 @@ function copyClabe() {
   );
 }
 
-/* ── BREATH TEXT ─────────────────────────────────────── */
-function breathText() {
-  gsap.to('#hN1', {
-    scale: 1.022, filter: 'brightness(1.12)',
-    duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true,
-    transformOrigin: 'center center'
-  });
-  gsap.to('#hN2', {
-    scale: 1.022, filter: 'brightness(1.12)',
-    duration: 4.8, ease: 'sine.inOut', repeat: -1, yoyo: true,
-    transformOrigin: 'center center', delay: 1.6
-  });
-  gsap.to('#hAmp', {
-    scale: 1.042, filter: 'brightness(1.22)',
-    duration: 3.4, ease: 'sine.inOut', repeat: -1, yoyo: true,
-    transformOrigin: 'center center', delay: 0.9
-  });
-  gsap.to('#hWe', {
-    letterSpacing: '7.8px',
-    duration: 5, ease: 'sine.inOut', repeat: -1, yoyo: true
-  });
-}
+/* breathText removido — los nombres ya no tienen efecto de respiración */
 
 /* ── INYECTAR ONDAS DECORATIVAS A SECCIONES ─────────── */
 function addSectionWaves() {
